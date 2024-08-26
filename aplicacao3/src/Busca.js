@@ -303,7 +303,7 @@ function App() {
   const quantidadeInput = useInput(1);
   return (
 
-    <Tudo className='aplicacao'>
+    <Tudo className='aplicacao'><div id="root"></div>
 
       <Titulo>
         <h2>Gerador de Dados Pessoais Falsos</h2>
