@@ -6,7 +6,7 @@ const connectDB = require('./middlewares/BD');
 const rotasPublicas = require('./routes/rotasPublicas');
 const rotasPrivadas = require('./routes/rotasPrivadas');
 require('dotenv').config();
-const { logRequests, logErrors } = require('./middlewares/logger');
+const { logger,logRequests, logErrors } = require('./middlewares/logger');
 
 
 const app = express();
