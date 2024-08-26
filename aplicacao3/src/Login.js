@@ -1,64 +1,69 @@
 import React, { useState } from 'react';
 import './Login.css';
 import { useNavigate } from 'react-router-dom'; 
-
-function Login() {
+onst Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
+  const validate = () => {
+    let isValid = true;
+    if (!username) {
+      setUsernameError('Username é obrigatório');
+      isValid = false;
+    } else {
+      setUsernameError('');
+    }
+    
+    if (!password) {
+      setPasswordError('Senha é obrigatória');
+      isValid = false;
+    } else {
+      setPasswordError('');
+    }
+    
+    return isValid;
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!validate()) {
+      return;
+    }
+
     setLoading(true);
-  
+
     try {
-      const response = await fetch('http://localhost:3001/api/login', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }), 
+        body: JSON.stringify({ username, password }),
       });
-  
-      if (!response.ok) {
-        if (response.status === 401) {
-          setError('Credenciais inválidas.');
-        } else if (response.status === 500) {
-          setError('Erro interno do servidor. Tente novamente mais tarde.');
-        } else {
-          setError('Erro desconhecido.');
-        }
-        return;
-      }
-  
-      const data = await response.json();
-  
-      if (data.token) {
-        localStorage.setItem('token', data.token);
-        setResponseMessage('Login bem-sucedido!');
-        
-        setTimeout(() => {
-          navigate('/busca');
-        }, 2000);
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        setResponseMessage('Login realizado com sucesso!');
       } else {
-        setResponseMessage(data.error || 'Erro desconhecido.');
+        setResponseMessage('');
+        setUsernameError('');
+        setPasswordError(result.message || 'Erro ao realizar login');
       }
     } catch (error) {
-      if (error instanceof TypeError && error.message === 'Failed to fetch') {
-        setError('Falha ao conectar ao servidor. Verifique sua conexão e tente novamente.Caso não consiga o Servidor pode estar Offline...');
-      } else {
-        setError('Falha ao fazer login. Verifique suas credenciais e tente novamente.');
-      }
-      console.error(error.message);
+      setResponseMessage('');
+      setUsernameError('');
+      setPasswordError('Erro de rede ou servidor indisponível');
     } finally {
       setLoading(false);
     }
   };
-  
+
 
   return (
     <div className="container">
