@@ -15,13 +15,17 @@ const PORT = process.env.PORT || 3002;
 // Middleware de log personalizado
 app.use((req, res, next) => {
   res.on('finish', () => {
-    console.log(`Request URL: ${req.originalUrl}`);
-    console.log(`Response Status: ${res.statusCode}`);
-    console.log(`Response Size: ${res.get('Content-Length') || 'Unknown'}`);
-    console.log(`Content-Encoding: ${res.get('Content-Encoding') || 'None'}`);
+    logger.info({
+      message: 'Request processed',
+      url: req.originalUrl,
+      status: res.statusCode,
+      size: res.get('Content-Length') || 'Unknown',
+      encoding: res.get('Content-Encoding') || 'None'
+    });
   });
   next();
 });
+
 //Não funcionou, queria testar a compressão de respostas do servidor. Mas aparentemente não está funcional,
 //usei compress paro o back-end e tentei usar o proprio CRA e webpack para comprimir as solicitações do front, mas aparentemente também não funcionou.
 
