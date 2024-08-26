@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 const User = require('../models/User'); 
 require('dotenv').config();
 
-const JWT_SECRET = process.env.JWT_SECRET; // Certifique-se de que esta variável é necessária para sua aplicação.
+const JWT_SECRET = process.env.JWT_SECRET; 
 
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/Aplicacao3', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      maxPoolSize: 1, // Ajuste conforme necessário
+      maxPoolSize: 1, 
     });
 
     console.log('Conectado ao MongoDB');    
@@ -27,7 +27,7 @@ const verificarEAdicionarAdmin = async () => {
     if (!admin) {
       const novoAdmin = new User({
         username: 'admin',
-        senha: 'admin', // Certifique-se de que a senha é criptografada antes de salvar
+        senha: 'admin',
         role: 'admin',
       });
 
