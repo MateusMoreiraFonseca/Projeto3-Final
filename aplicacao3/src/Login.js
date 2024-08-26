@@ -1,69 +1,87 @@
 import React, { useState } from 'react';
 import './Login.css';
 import { useNavigate } from 'react-router-dom'; 
-onst Login = () => {
+
+function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [usernameError, setUsernameError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [responseMessage, setResponseMessage] = useState('');
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [responseMessage, setResponseMessage] = useState('');
+  const navigate = useNavigate();
 
   const validate = () => {
     let isValid = true;
     if (!username) {
-      setUsernameError('Username é obrigatório');
+      setError('Username é obrigatório');
       isValid = false;
     } else {
-      setUsernameError('');
+      setError('');
     }
     
     if (!password) {
-      setPasswordError('Senha é obrigatória');
+      setError('Senha é obrigatória');
       isValid = false;
     } else {
-      setPasswordError('');
+      setError('');
     }
     
     return isValid;
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
 
     if (!validate()) {
       return;
     }
-
+    e.preventDefault();
+    setError(null);
     setLoading(true);
-
+  
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch('http://localhost:3001/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password }), 
       });
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        setResponseMessage('Login realizado com sucesso!');
+  
+      if (!response.ok) {
+        if (response.status === 401) {
+          setError('Credenciais inválidas.');
+        } else if (response.status === 500) {
+          setError('Erro interno do servidor. Tente novamente mais tarde.');
+        } else {
+          setError('Erro desconhecido.');
+        }
+        return;
+      }
+  
+      const data = await response.json();
+  
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        setResponseMessage('Login bem-sucedido!');
+        
+        setTimeout(() => {
+          navigate('/busca');
+        }, 2000);
       } else {
-        setResponseMessage('');
-        setUsernameError('');
-        setPasswordError(result.message || 'Erro ao realizar login');
+        setResponseMessage(data.error || 'Erro desconhecido.');
       }
     } catch (error) {
-      setResponseMessage('');
-      setUsernameError('');
-      setPasswordError('Erro de rede ou servidor indisponível');
+      if (error instanceof TypeError && error.message === 'Failed to fetch') {
+        setError('Falha ao conectar ao servidor. Verifique sua conexão e tente novamente.Caso não consiga o Servidor pode estar Offline...');
+      } else {
+        setError('Falha ao fazer login. Verifique suas credenciais e tente novamente.');
+      }
+      console.error(error.message);
     } finally {
       setLoading(false);
     }
   };
-
+  
 
   return (
     <div className="container">
