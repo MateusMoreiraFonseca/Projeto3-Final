@@ -6,6 +6,8 @@ const connectDB = require('./middlewares/BD');
 const rotasPublicas = require('./routes/rotasPublicas');
 const rotasPrivadas = require('./routes/rotasPrivadas');
 require('dotenv').config();
+const { logRequests, logErrors } = require('./middlewares/logger');
+
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -21,6 +23,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(logRequests); 
 app.use(helmet());
 app.use(compression());
 app.use(express.json());
@@ -39,6 +42,8 @@ connectDB();
 
 app.use('/api', rotasPublicas);
 app.use('/logged', rotasPrivadas);
+
+app.use(logErrors);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
