@@ -26,6 +26,15 @@ app.use(compression());
 app.use(express.json());
 app.use(cors());
 
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'public, max-age=3600'); 
+  next();
+});
+
+app.get('/api/data', (req, res) => {
+  res.json({ message: 'Este é um dado que pode ser armazenado em cache.' });
+});
+
 connectDB();
 
 app.use('/api', rotasPublicas);
