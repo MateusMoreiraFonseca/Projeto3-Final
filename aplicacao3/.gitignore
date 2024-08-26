@@ -1,0 +1,36 @@
+# Dependências do Node.js
+node_modules/
+
+# Arquivos e pastas de build
+build/
+
+# Arquivos de log
+*.log
+
+# Diretório de cobertura
+coverage/
+
+# Configurações do ambiente
+.env
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de lock de gerenciador de pacotes
+package-lock.json
+yarn.lock
+
+# Arquivos e pastas de IDE/editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Arquivos temporários do sistema
+*.tmp
+*.swp
+*.swo
+
+# Arquivos gerados por ferramentas de testes
+*.snap
