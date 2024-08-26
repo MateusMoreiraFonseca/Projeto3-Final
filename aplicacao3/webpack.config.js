@@ -1,12 +1,19 @@
-const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
-  plugins: [
-    new CompressionWebpackPlugin({
-      algorithm: 'gzip',
-      test: /\.(js|css|html|svg)$/, 
-      threshold: 10240, 
-      minRatio: 0.2, 
-    }),
-  ],
+  mode: 'production',
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin(),
+      new CssMinimizerPlugin(),
+    ],
+  },
 };
