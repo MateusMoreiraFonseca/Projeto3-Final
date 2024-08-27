@@ -12,7 +12,6 @@ const { logger,logRequests, logErrors } = require('./middlewares/logger');
 const app = express();
 const PORT = process.env.PORT || 3002;
 
-// Middleware de log personalizado
 app.use((req, res, next) => {
   res.on('finish', () => {
     logger.info({
@@ -25,9 +24,6 @@ app.use((req, res, next) => {
   });
   next();
 });
-
-//Não funcionou, queria testar a compressão de respostas do servidor. Mas aparentemente não está funcional,
-//usei compress paro o back-end e tentei usar o proprio CRA e webpack para comprimir as solicitações do front, mas aparentemente também não funcionou.
 
 app.use(logRequests); 
 app.use(helmet());
