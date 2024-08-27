@@ -48,7 +48,8 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(), // limpa a pasta de build antes de cada build
     new HtmlWebpackPlugin({
-      template: './public/index.html', // gera o arquivo HTML e injeta o bundle JS
+      title: 'Minha Aplicação', // título da página
+      templateContent: '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Minha Aplicação</title></head><body><div id="root"></div></body></html>', // conteúdo do HTML
       filename: 'index.html',
     }),
     new MiniCssExtractPlugin({
