@@ -11,8 +11,7 @@ function Login() {
   const navigate = useNavigate();
 
   const [usernameError, setUsernameError] = useState('');
-const [passwordError, setPasswordError] = useState('');
-
+  const [passwordError, setPasswordError] = useState('');
 
   const validate = () => {
     let isValid = true;
@@ -34,12 +33,14 @@ const [passwordError, setPasswordError] = useState('');
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
 
     if (!validate()) {
       return;
     }
-    e.preventDefault();
+    
     setError(null);
+    setResponseMessage('');
     setLoading(true);
   
     try {
@@ -76,7 +77,7 @@ const [passwordError, setPasswordError] = useState('');
       }
     } catch (error) {
       if (error instanceof TypeError && error.message === 'Failed to fetch') {
-        setError('Falha ao conectar ao servidor. Verifique sua conexão e tente novamente.Caso não consiga o Servidor pode estar Offline...');
+        setError('Falha ao conectar ao servidor. Verifique sua conexão e tente novamente. Caso não consiga, o servidor pode estar offline.');
       } else {
         setError('Falha ao fazer login. Verifique suas credenciais e tente novamente.');
       }
@@ -85,32 +86,29 @@ const [passwordError, setPasswordError] = useState('');
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="container">
       <form className="form" onSubmit={handleSubmit}>
         <h2>Login</h2>
         {error && <p className="error">{error}</p>}
-        {responseMessage && <p className="response">{responseMessage}</p>}
+        {responseMessage && !error && <p className="response">{responseMessage}</p>}
         <input
           className="input"
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          required
         />
-         {usernameError && <p className="error">{usernameError}</p>}
+        {usernameError && <p className="error">{usernameError}</p>}
         <input
           className="input"
           type="password"
           placeholder="Senha"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
         />
-            {passwordError && <p className="error">{passwordError}</p>}
+        {passwordError && <p className="error">{passwordError}</p>}
         <button className="button" type="submit" disabled={loading}>
           {loading ? 'Entrando...' : 'Entrar'}
         </button>
@@ -118,6 +116,5 @@ const [passwordError, setPasswordError] = useState('');
     </div>
   );
 }
-
 
 export default Login;
