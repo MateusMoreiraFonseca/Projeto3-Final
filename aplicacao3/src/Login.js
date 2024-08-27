@@ -10,20 +10,24 @@ function Login() {
   const [responseMessage, setResponseMessage] = useState('');
   const navigate = useNavigate();
 
+  const [usernameError, setUsernameError] = useState('');
+const [passwordError, setPasswordError] = useState('');
+
+
   const validate = () => {
     let isValid = true;
     if (!username) {
-      setError('Username é obrigatório');
+      setUsernameError('Username é obrigatório');
       isValid = false;
     } else {
-      setError('');
+      setUsernameError('');
     }
     
     if (!password) {
-      setError('Senha é obrigatória');
+      setPasswordError('Senha é obrigatória');
       isValid = false;
     } else {
-      setError('');
+      setPasswordError('');
     }
     
     return isValid;
@@ -97,6 +101,7 @@ function Login() {
           onChange={(e) => setUsername(e.target.value)}
           required
         />
+         {usernameError && <p className="error">{usernameError}</p>}
         <input
           className="input"
           type="password"
@@ -105,6 +110,7 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+            {passwordError && <p className="error">{passwordError}</p>}
         <button className="button" type="submit" disabled={loading}>
           {loading ? 'Entrando...' : 'Entrar'}
         </button>
