@@ -7,9 +7,6 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/Aplicacao3', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      maxPoolSize: 1, 
     });
 
     console.log('Conectado ao MongoDB');    

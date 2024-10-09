@@ -120,7 +120,6 @@ function App() {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
-
       }
       );
 
@@ -130,12 +129,14 @@ function App() {
       if (!response.ok) throw new Error('Falha ao consultar dados');
 
       const data = await response.json();
+      setFakeData(data);
+      
       if (!Array.isArray(data)) {
         setErroRequisicao('Dados inválidos retornados pela API.');
         return;
       }
 
-      setFakeData(data);
+      
       setSucesso(`Dados recuperados com sucesso! Temos ${data.length} dados Recuperados`);
       setCurrentPage(1);
       setMostrarExcluir(true);
